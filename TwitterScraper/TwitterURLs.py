@@ -8,6 +8,9 @@ from Secret import *
 #import TwitterAPI
 from TwitterAPI import TwitterAPI
 
+#Global Printing Variable
+VERBOSE = False
+
 class TwitterURLs():
   """
   Twitter URLs enables access to the URLs posted by the authorised user and
@@ -60,6 +63,8 @@ class TwitterURLs():
     a userID and the value is a list of recent URLs they have tweeted
     """
 
+    if (userID not in self.tweets.keys()): self.setTweets(userID)
+
     self.urls[userID] = []
 
     for tweet in self.tweets[userID]:
@@ -68,39 +73,52 @@ class TwitterURLs():
       for url in urls:
         self.urls[userID].append(url['expanded_url'])
 
-  def printFollowers(self):
+  def getFollowers(self):
     "printFollowers prints all followers in the class variable followers"
 
-    for follower in self.followers:
-      print follower
+    if (len(self.followers) == 0): self.setFollowers()
 
-  def printTweets(self,userID='owner'):
+    if VERBOSE:
+      for follower in self.followers:
+        print follower
+
+    return self.followers
+
+  def getTweets(self,userID='owner'):
     "printTweets prints all the tweet text for the given userID"
 
-    for tweet in self.tweets[userID]:
-      print tweet['text']
+    if (userID not in self.tweets.keys()): self.setTweets(userID)
 
-  def printURLs(self,userID='owner'):
+    tweets = []
+
+    for tweet in self.tweets[userID]:
+      if VERBOSE: print tweet['text']
+      tweets.append(tweet['text'])
+
+    return tweets
+
+  def getURLs(self,userID='owner'):
     "printURLs prints all the URLs shared by the given userID"
 
-    for url in self.urls[userID]:
-      print url
+    if (userID not in self.urls.keys()): self.setURLs(userID)
+
+    if VERBOSE:
+      for url in self.urls[userID]:
+        print url
+
+    return self.urls[userID]
 
 if (__name__ == "__main__"):
+  VERBOSE = True
   twitterURLs = TwitterURLs()
 
-  #Set list of followers and print
-  twitterURLs.setFollowers()
-  twitterURLs.printFollowers()
+  #Get list of twitter followers
+  twitterURLs.getFollowers()
 
-  #Get tweets and URLs for AUTH user and print
-  twitterURLs.setTweets()
-  twitterURLs.setURLs()
-  twitterURLs.printTweets()
-  twitterURLs.printURLs()
+  #Get tweets and URLs for AUTH user
+  twitterURLs.getTweets()
+  twitterURLs.getURLs()
 
   #Get tweets and URLs for user with userID 2815238795
-  twitterURLs.setTweets('2815238795')
-  twitterURLs.setURLs('2815238795')
-  twitterURLs.printTweets('2815238795')
-  twitterURLs.printURLs('2815238795')
+  twitterURLs.getTweets('2815238795')
+  twitterURLs.getURLs('2815238795')

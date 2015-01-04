@@ -36,7 +36,9 @@ Copy the 'SecretExample.py' file name it 'Secret.py' then populate the all keys 
 
 ######Test the functionality
 
-  (venv)$ python TwitterURLs.py
+  (venv)$ python TwitterScraper.py
+
+If this does not work then edit the 'TwitterScraper.py' file to use a list of saved urls as opposed to loading from twitter
 
 ######Deactivate the virtual environment
 

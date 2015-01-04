@@ -2,7 +2,10 @@
 *.pyc
 
 #Secret Files
-secret.py
+Secret.py
+
+#Saved Pages
+SavedPages/
 
 #Virtual Environment
 venv/
