@@ -1,0 +1,8 @@
+#Python Files
+*.pyc
+
+#Secret Files
+secret.py
+
+#Virtual Environment
+venv/
