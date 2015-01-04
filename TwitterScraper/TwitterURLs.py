@@ -1,9 +1,9 @@
 """
-TwitterURLs.py test the functionality of TwitterAPI
+TwitterURLs.py is a class that can be used to obtain the URLs of user tweets
 """
 
 #import all secret keys for twitter access
-from secret import *
+from Secret import *
 
 #import TwitterAPI
 from TwitterAPI import TwitterAPI
