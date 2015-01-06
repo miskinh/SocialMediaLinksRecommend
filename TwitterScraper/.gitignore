@@ -1,0 +1,11 @@
+#Python Files
+*.pyc
+
+#Secret Files
+Secret.py
+
+#Saved Pages
+SavedPages/
+
+#Virtual Environment
+venv/
