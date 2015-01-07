@@ -36,10 +36,15 @@ class TwitterURLs():
     following the authorised user
     """
 
-    response = self.api.request('followers/ids')
+    self.followers = []
+
+    response = self.api.request('followers/list',{'skip_status':'true','include_user_entities':'false'})
     
     for item in response:
-      self.followers = item['ids']
+      for user in item['users']:
+        self.followers.append(user['id'])
+        #self.followers.append(user['screen_name'])
+
   
   def setTweets(self,userID='owner'):
     """
@@ -108,12 +113,30 @@ class TwitterURLs():
 
     return self.urls[userID]
 
-if (__name__ == "__main__"):
+  def getAllURLs(self):
+    "getAllURLs gets all the the URLs shared by a users followers"
+
+    if (len(self.followers) == 0): self.setFollowers()
+
+    #set the urls for owner
+    self.setURLs()
+
+    #get the urls for all owners
+    for follower in self.followers:
+      setURLs(follower)
+
+    #return the urls dictionary object
+    return self.urls
+
+
+def run():
   VERBOSE = True
   twitterURLs = TwitterURLs()
-
+  
   #Get list of twitter followers
   twitterURLs.getFollowers()
+
+  return
 
   #Get tweets and URLs for AUTH user
   twitterURLs.getTweets()
@@ -122,3 +145,6 @@ if (__name__ == "__main__"):
   #Get tweets and URLs for user with userID 2815238795
   twitterURLs.getTweets('2815238795')
   twitterURLs.getURLs('2815238795')
+
+if (__name__ == "__main__"):
+  run()

@@ -38,6 +38,11 @@ SAVED_URLS = [u'http://gizmo.do/CJSCp2P',
         u'http://klou.tt/uwuzf3ksyrlh',
         u'http://s.hbr.org/115ohsP']
 
+def getAllTwitterArticles():
+  "saves the text content for all "
+
+  return
+
 if (__name__ == "__main__"):
 
   #Change to false to not use twitter
