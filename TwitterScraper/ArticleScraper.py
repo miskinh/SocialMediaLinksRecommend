@@ -5,7 +5,8 @@ ArticleScraper.py uses newspaper to obtain the text from news articles
 #import shared functions
 from Shared import *
 
-import os
+#import library functions
+import os, re
 
 #import newspaper article
 from newspaper import Article
@@ -38,13 +39,23 @@ class ArticleScraper():
     print "=============="
     print self.article.text
 
-  def saveArticle(self,path="SavedPages"):
+  def saveArticle(self,folderName=""):
     """
-    saveArticle saves the textual content of the article
+    saveArticle saves the textual content of the article within NewsArticles 
+    folderName defined the sub directory where articles are stored
     """
 
-    name = self.article.title
-    filePath = os.path.join(path,name.encode('ascii','ignore'))
+    #join directory with folderName
+    directory = os.path.join("NewsArticles",cleanFilename(folderName))
+
+    #create directory if it does not exist
+    if not os.path.exists(directory):
+      os.makedirs(directory)
+
+    #name the file the same as the web page title
+    fileName = "{}.txt".format(cleanFilename(self.article.title))
+    filePath = os.path.join(directory,fileName)
+
     fileContent = self.article.text
     saveFile(filePath,fileContent.encode('ascii','ignore'))
 
@@ -52,6 +63,7 @@ if (__name__ == "__main__"):
   articleScraper = ArticleScraper()
 
   articleScraper.getArticle('http://www.bbc.co.uk/news/world-asia-30706298')
+  articleScraper.printArticle()
   articleScraper.saveArticle()
 
   articleScraper.getArticle('  http://www.theguardian.com/lifeandstyle/wordofmouth/2015/jan/06/-sp-cup-soup-instant-taste-test-batchelors')

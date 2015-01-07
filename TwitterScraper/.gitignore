@@ -4,8 +4,8 @@
 #Secret Files
 Secret.py
 
-#Saved Pages
-SavedPages/
+#Saved Articles
+NewsArticles/
 
 #Virtual Environment
 venv/

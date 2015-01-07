@@ -3,7 +3,24 @@ Shared.py contains shared functionality
 """
 
 #library imports
-import urllib2,HTMLParser
+import re,urllib2,HTMLParser
+
+def cleanFilename(filename):
+  "Reduces a filename to the simplest for with only letters numbers and underscores"
+
+  #replace any non word character with a space
+  pattern = re.compile(r"\W")
+  filename = re.sub(pattern," ",filename)
+
+  #remove whitespace of more than a single digit or any preceding whitespace
+  pattern = re.compile(r"(\s{2,})|(^\s+)")
+  filename = re.sub(pattern,"",filename)
+
+  #replace any single whitespace with _
+  pattern = re.compile(r"\s{1}")
+  filename = re.sub(pattern,"_",filename)
+
+  return filename.lower()
 
 def loadFile(filename):
   "Load a file with the given filename and return the content of the file"
