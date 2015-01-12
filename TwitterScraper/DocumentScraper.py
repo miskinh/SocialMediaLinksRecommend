@@ -120,10 +120,21 @@ class DocumentScraper():
 
 
 if (__name__ == "__main__"):
-  documentScraper = DocumentScraper()
+    documentScraper = DocumentScraper()
 
-  documentScraper.setPage("http://www.bbc.co.uk/news/uk-politics-30670633")
-  documentScraper.saveParagraphs()
+    documentScraper.setPage("https://www.google.co.uk/search?client=safari&rls=en&q=bag+of+words+example&ie=UTF-8&oe=UTF-8&gfe_rd=cr&ei=BNOxVPOvGc7H8gfq24LABg#rls=en&q=simple+text+documents")
+    documentScraper.saveParagraphs()
 
-  documentScraper.setPage("http://www.theguardian.com/politics/2015/jan/04/david-cameron-ukip-coalition-nigel-farage")
-  documentScraper.saveParagraphs()
+    documentScraper.setPage("http://www.newyorker.com/humor/borowitz-report/republicans-expose-obamas-college-plan-plot-make-people-smarter?intcid=mod-most-popular")
+    documentScraper.saveParagraphs()
+
+    documentScraper.setPage("http://www.newyorker.com/news/news-desk/blame-for-charlie-hebdo-murders?intcid=mod-most-popular")
+    documentScraper.saveParagraphs()
+
+    documentScraper.setPage("http://www.newyorker.com/humor/daily-shouts/bananaz-book-instructions-miley-cyrus")
+    documentScraper.saveParagraphs()
+
+    documentScraper.setPage("http://www.newyorker.com/magazine/2014/11/03/grain?intcid=mod-most-popular")
+    documentScraper.saveParagraphs()
+
+

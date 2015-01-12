@@ -1,8 +1,8 @@
 """
-TwitterScraper.py uses TwitterURLs and DocumentScraper to save a number of twitter links to a minimised version in the SavedPages
+TwitterScraper.py uses TwitterURLs and ArticleScraper to save a number of twitter links to a minimised version in the SavedPages
 """
 
-from DocumentScraper import DocumentScraper
+from ArticleScraper import ArticleScraper
 from TwitterURLs import TwitterURLs
 
 def getTwitterURLs(userID='owner'):
@@ -13,13 +13,38 @@ def getTwitterURLs(userID='owner'):
 
   return urls
 
-def saveParagraphs(urls):
+def saveArticles(urls):
   "saves the paragraph content of all urls given"
 
-  documentScraper = DocumentScraper()
+  articleScraper = ArticleScraper()
+
   for url in urls:
-    documentScraper.setPage(url)
-    documentScraper.saveParagraphs()
+    articleScraper.getArticle(url)
+    articleScraper.saveArticle(screenName)
+
+def runSaveArticles(useTwitter=False):
+  "saves the articles shared by owner or a sample set of articles defined bellow"
+  #Change to false to not use twitter
+
+  if useTwitter:
+    urls = getTwitterURLs()
+  else:
+    urls = SAVED_URLS
+
+  saveArticles(urls)
+
+def getAllTwitterArticles():
+  "saves the text content for all "
+
+  twitterURLs = TwitterURLs(32)
+  articleScraper = ArticleScraper()
+
+  userURLs = twitterURLs.getAllURLs()
+
+  for screenName,urls in userURLs.items():
+    for url in urls:
+      articleScraper.getArticle(url)
+      articleScraper.saveArticle(screenName)
 
 SAVED_URLS = [u'http://gizmo.do/CJSCp2P',
         u'http://bit.ly/1r1TeoM',
@@ -39,11 +64,5 @@ SAVED_URLS = [u'http://gizmo.do/CJSCp2P',
         u'http://s.hbr.org/115ohsP']
 
 if (__name__ == "__main__"):
-
-  #Change to false to not use twitter
-  if True:
-    urls = getTwitterURLs()
-  else:
-    urls = SAVED_URLS
-
-  saveParagraphs(urls)
+  # runSaveArticles()
+  getAllTwitterArticles()

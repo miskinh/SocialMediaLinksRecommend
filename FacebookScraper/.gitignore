@@ -1,12 +1,12 @@
 #Python Files
+__pycache__/
 *.pyc
+
+#Data
+*.json
 
 #Secret Files
 Secret.py
-
-#Saved Articles
-NewsArticles/
-SavedPages/
 
 #Virtual Environment
 venv/
