@@ -2,7 +2,11 @@
 #include <string>
 #include <fstream>
 #include "lda.h"
+<<<<<<< HEAD
 #define NO_DOCUMENTS 3
+=======
+#define NO_DOCUMENTS 5
+>>>>>>> 85cfbb838227a8bae61dd1c8a3783c989a2130e6
 
 using namespace std;
 
