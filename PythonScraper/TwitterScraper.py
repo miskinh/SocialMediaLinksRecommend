@@ -2,8 +2,8 @@
 TwitterScraper.py uses TwitterURLs and ArticleScraper to save a number of twitter links to a minimised version in the SavedPages
 """
 
-from ArticleScraper import ArticleScraper
-from TwitterURLs import TwitterURLs
+from NewsScraper.ArticleScraper import ArticleScraper
+from TwitterScraper.TwitterURLs import TwitterURLs
 
 def getTwitterURLs(userID='owner'):
   "gets all the urls in recent posts by the given user"
@@ -20,7 +20,7 @@ def saveArticles(urls):
 
   for url in urls:
     articleScraper.getArticle(url)
-    articleScraper.saveArticle(screenName)
+    articleScraper.saveArticle("Test")
 
 def runSaveArticles(useTwitter=False):
   "saves the articles shared by owner or a sample set of articles defined bellow"
@@ -64,5 +64,5 @@ SAVED_URLS = [u'http://gizmo.do/CJSCp2P',
         u'http://s.hbr.org/115ohsP']
 
 if (__name__ == "__main__"):
-  # runSaveArticles()
-  getAllTwitterArticles()
+  runSaveArticles()
+  #getAllTwitterArticles()

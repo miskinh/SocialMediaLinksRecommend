@@ -46,7 +46,7 @@ class ArticleScraper():
     """
 
     #join directory with folderName
-    directory = os.path.join("NewsArticles",cleanFilename(folderName))
+    directory = os.path.join("SavedArticles",cleanFilename(folderName))
 
     #create directory if it does not exist
     if not os.path.exists(directory):
