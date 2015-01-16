@@ -29,13 +29,13 @@ class SiteScraper(object):
     minLength = 250
     self.articles[siteURL] = {}
 
-    for articleURL in self.articleURLs[siteURL][:10]:
+    for articleURL in self.articleURLs[siteURL]:
       #get the article and then download
       self.articleScraper.getArticle(articleURL)
       
       try:
-        name,text = self.articleScraper.saveArticle(siteURL,minLength)
-        self.articles[siteURL][name] = text
+        title,text = self.articleScraper.saveArticle(siteURL,minLength)
+        self.articles[siteURL][title] = text
       except ValueError: continue
 
     print(self.articles[siteURL])
