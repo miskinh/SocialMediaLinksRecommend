@@ -39,11 +39,14 @@ class ArticleScraper():
     print "=============="
     print self.article.text
 
-  def saveArticle(self,folderName=""):
+  def saveArticle(self,folderName="",minLength=100):
     """
     saveArticle saves the textual content of the article within NewsArticles 
     folderName defined the sub directory where articles are stored
     """
+
+    fileContent = self.article.text
+    if (len(fileContent) < minLength): raise ValueError
 
     #join directory with folderName
     directory = os.path.join("SavedArticles",cleanFilename(folderName))
@@ -56,8 +59,9 @@ class ArticleScraper():
     fileName = "{}.txt".format(cleanFilename(self.article.title))
     filePath = os.path.join(directory,fileName)
 
-    fileContent = self.article.text
     saveFile(filePath,fileContent.encode('ascii','ignore'))
+
+    return fileContent
 
 if (__name__ == "__main__"):
   articleScraper = ArticleScraper()
@@ -66,6 +70,6 @@ if (__name__ == "__main__"):
   articleScraper.printArticle()
   articleScraper.saveArticle()
 
-  articleScraper.getArticle('  http://www.theguardian.com/lifeandstyle/wordofmouth/2015/jan/06/-sp-cup-soup-instant-taste-test-batchelors')
+  articleScraper.getArticle('http://www.theguardian.com/lifeandstyle/wordofmouth/2015/jan/06/-sp-cup-soup-instant-taste-test-batchelors')
   articleScraper.saveArticle()
 
