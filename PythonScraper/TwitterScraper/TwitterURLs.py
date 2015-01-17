@@ -44,7 +44,9 @@ class TwitterURLs():
     response = self.api.request('followers/list',{'skip_status':'true','include_user_entities':'false','count':self.responseCount})
     
     for item in response:
-      for user in item['users']:
+      for user in item['users'][:1]:
+        for key, value in user.items():
+          print(key,value)
         self.followers.append(user['screen_name'])
 
   
@@ -135,16 +137,17 @@ class TwitterURLs():
     return self.urls
 
 if (__name__ == "__main__"):
-  VERBOSE = True
+  # VERBOSE = True
   twitterURLs = TwitterURLs()
   
   #Get list of twitter followers
   twitterURLs.getFollowers()
 
-  #Get tweets and URLs for AUTH user
-  twitterURLs.getTweets()
-  twitterURLs.getURLs()
 
-  #Get tweets and URLs for user with screenName 2815238795
-  twitterURLs.getTweets('JamesDolman')
-  twitterURLs.getURLs('JamesDolman')
+  # #Get tweets and URLs for AUTH user
+  # twitterURLs.getTweets()
+  # twitterURLs.getURLs()
+
+  # #Get tweets and URLs for user with screenName 2815238795
+  # twitterURLs.getTweets('JamesDolman')
+  # twitterURLs.getURLs('JamesDolman')

@@ -3,7 +3,12 @@ Shared.py contains shared functionality
 """
 
 #library imports
-import re,urllib2,HTMLParser
+import re,json,urllib2,HTMLParser
+
+def saveJSON(filename,data):
+  "saves the data object as a JSON string"
+  with open(filename,"w") as openFile:
+      openFile.write(json.dumps(data))
 
 def cleanFilename(filename):
   "Reduces a filename to the simplest for with only letters numbers and underscores"

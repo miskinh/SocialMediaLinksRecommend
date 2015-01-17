@@ -8,5 +8,9 @@ __pycache__/
 #Secret Files
 Secret.py
 
+#Saved Articles
+SavedPages/
+SavedArticles/
+
 #Virtual Environment
 venv/

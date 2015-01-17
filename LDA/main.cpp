@@ -2,33 +2,31 @@
 #include <string>
 #include <fstream>
 #include "lda.h"
-<<<<<<< HEAD
-#define NO_DOCUMENTS 3
-=======
-#define NO_DOCUMENTS 5
->>>>>>> 85cfbb838227a8bae61dd1c8a3783c989a2130e6
 
 using namespace std;
 
-int main(){
+int main(int argv, char* argc[]){
+
+	ofstream out;
+	out.open("topics.txt");
 
 	int noTopics = 5;
 
-	string documents[NO_DOCUMENTS];
+	char** filenames = new char* [argv-1];
 
-	documents[0] = "the dog and the cat decided to go for walk in the park together";
-	documnets[1] = "scientist have discovered the large clouds of helium kill crops";
-	documents[2] = "ben and jerrys ice cream is the great thing in the world because you can use in the park park to fill helium ballons";
-	
-	Lda l(NO_DOCUMENTS,documents,noTopics);
+	for(int i = 1; i < argv; i++){
+		filenames[i-1] = argc[i];
+	}
 
-	l.outputDocuments();
+	Lda l(argv-1,filenames,noTopics);
 
-	l.algorithm(20);
+	l.algorithm(5);
 
-	l.outputTopicWordAssignment(cout);
+	//l.outputTopicWordAssignment(out);
 
-	l.outputWordsInEachTopic(cout);
+	l.outputWordsInEachTopic(out);
+
+	out.close();
 
 	return 0;
 }

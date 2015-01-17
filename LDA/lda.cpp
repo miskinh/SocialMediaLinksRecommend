@@ -3,17 +3,17 @@
 #include <cstdlib>
 #include <sstream>
 #include <iomanip>
+#include <fstream>
 
 #include "lda.h"
 
 using namespace std;
 
-Lda::Lda(int noDocuments, string inputDocuments[], int noTopics){
+Lda::Lda(int noDocuments, char* inputDocuments[], int noTopics){
 	K = noTopics;
 
 	M = noDocuments;
 
-	//only first index can have dynamic size int[M][K]
 	N = new int* [M];
 
 	assignment = new int* [M];
@@ -21,16 +21,19 @@ Lda::Lda(int noDocuments, string inputDocuments[], int noTopics){
 	alpha = 50.0/K;
 	beta = 0.1;
 
-	documents = new string[noDocuments];
+	documents = new char* [noDocuments];
 
 	for(int i = 0; i < M; i++){
-		documents[i] = inputDocuments[i];
+		int fileNameLength = strlen(inputDocuments[i]);
+		documents[i] = new char[fileNameLength+1];
+		strcpy(documents[i],inputDocuments[i]);
 		int numWords = countWords(documents[i]);
 		assignment[i] = new int[numWords];
 		N[i] = new int[K];
 		for(int topic = 0; topic < K; topic++)
 			N[i][topic] = 0;
 	}
+
 }
 
 Lda::~Lda(){
@@ -39,105 +42,112 @@ Lda::~Lda(){
 		delete N[i];
 		delete assignment[i];
 	}
-	delete N;
-	delete assignment;
-	for(map<string,int*>::iterator it = v.begin(); it != v.end(); ++it)
-		delete it->second;
+	delete [] N;
+	delete [] assignment;
+	for(map<int,int*>::iterator it = v.begin(); it != v.end(); ++it)
+		delete [] it->second;
 }
 
-void Lda::outputDocuments(){
-	for(int i = 0; i < M; i++){
-		cout << documents[i];
-		cout << " " << countWords(documents[i]) << endl;
-	}
-	cout << endl;
-	return;
-}
-
-int Lda::countWords(string document){
-	int i = 0, count = 0;
-	while(document[i] != '\0'){
-		if(document[i] == ' ')
-			count++;
-		i++;
-	}
-	if(i > 0)
-		count++;
-	return count;
+int Lda::countWords(const char* filename){
+	int numWords = 0;
+	fstream in(filename);
+	std::string unused;
+	while ( std::getline(in, unused) )
+   		++numWords;
+   	in.close();
+   	return numWords;
 }
 
 void Lda::algorithm(int noRepetitions){
+	ifstream in;
+	ofstream out;
+
 	for(int i = 0; i < noRepetitions; i++){
-		//iteratate through documents
 		for(int d = 0; d < M; d++){
-			int noWords = countWords(documents[d]);
-			//iterate over words
-			istringstream iss(documents[d]);
-			string token;
-			for(int n = 0; n < noWords; n++){
-				iss >> token;
-				//if the first iteration through the algorithm
-				if(i == 0){
-					//create new entry in v if none already
-					map<string,int*>::iterator it = v.find(token);
+			in.open(documents[d]);
+			int word;
+			//first iteration
+			if(i == 0){
+				int n = 0;
+				in >> word;
+				while(!in.eof()){
+					map<int,int*>::iterator it = v.find(word);
 					if(it == v.end()){
-						v[token] = new int[K];
+						v[word] = new int[K];
 						for(int index = 0; index < K; index++)
-							v[token][index] = 0;
+							v[word][index] = 0;
 					}
+					//get the next topic
 					int topic = rand() % K;
 					assignment[d][n] = topic;
-					v[token][topic]++;
+					v[word][topic]++;
 					N[d][topic]++;
+					n++;
+					in >> word;
 				}
-				//if not the first iteration
-				else{
+			}else{
+				int n = 0;
+				in >> word;
+				while(!in.eof()){
 					//unassign word
 					int assignedTopic = assignment[d][n];
-					v[token][assignedTopic]--;
+					v[word][assignedTopic]--;
 					N[d][assignedTopic]--;
 
-					//find new best topic assignment based on rest of document
 					double* scores = new double[K];
 					int best = 0;
+
 					for(int z = 0; z < K; z++){
-						scores[z] = calculateStatistic(z,token,d);
-						if(z > 0){
-							if(scores[z] > scores[z-1])
-								best = z;
+						scores[z] = calculateStatistic(z,word,d);
+					}
+					for(int z = 0; z < K; z++){
+						if(scores[best] < scores[z]){
+							best = z;
 						}
 					}
 					//make new assignment
-					v[token][best]++;
+					v[word][best]++;
 					N[d][best]++;
 					assignment[d][n] = best;
+					n++;
+					in >> word;
 				}
 			}
+			in.close();
 		}
 	}
+	out.close();
 	return;
 }
 
 void Lda::outputTopicWordAssignment(ostream& out){
 	for(int d = 0; d < M; d++){
-		int numWords = countWords(documents[d]);
-		istringstream iss(documents[d]);
-		string token;
-		for(int n = 0; n < numWords; n++){
-			iss >> token;
-			out << token << "(" << assignment[d][n] <<") ";
+		int nextWord;
+		ifstream in(documents[d]);
+		in >> nextWord;
+		int n = 0;
+		while(!in.eof()){
+			out << nextWord << "(" << assignment[d][n] <<") ";
+			in >> nextWord;
+			n++;
 		}
-		out << endl;
+		in.close();
 	}
 	out << endl;
 	return;
 }
 
 void Lda::outputWordsInEachTopic(ostream& out){
-	for(map<string,int*>::iterator it = v.begin(); it != v.end(); ++it){
+	out << setw(20) << " ";
+	for(int topic = 0; topic < K; topic++){
+		out << "Topic " << topic << "\t";
+	}
+	out << endl;
+
+	for(map<int,int*>::iterator it = v.begin(); it != v.end(); ++it){
 		out << setw(20)<< it->first << "\t";
 		for(int topic = 0; topic < K; topic++){
-			cout << it->second[topic] << "\t";
+			out << it->second[topic] << "\t";
 		}
 		out << endl;
 	}
@@ -145,7 +155,7 @@ void Lda::outputWordsInEachTopic(ostream& out){
 	return;
 }
 
-double Lda::calculateStatistic(int topic, string word, int document){
+double Lda::calculateStatistic(int topic, int word, int document){
 	double denominator1 = 0.0;
 	for(int i = 0; i < K; i++){
 		denominator1 += N[document][i];
@@ -154,14 +164,15 @@ double Lda::calculateStatistic(int topic, string word, int document){
 	double numerator1 = N[document][topic] + alpha;
 	double denominator2 = 0.0;
 	for(int d = 0; d < M; d++){
-		int numWords = countWords(documents[d]);
-		istringstream iss(documents[d]);
-		string token;
-		for(int n = 0; n < numWords; n++){
-			iss >> token;
-			denominator2 += v[token][topic];
+		int nextWord;
+		ifstream in(documents[d]);
+		in >> nextWord;
+		while(!in.eof()){
+			denominator2 += v[nextWord][topic];
 			denominator2 += beta;
+			in >> nextWord;
 		}
+		in.close();
 	}
 	double numerator2 = v[word][topic] + beta;
 
