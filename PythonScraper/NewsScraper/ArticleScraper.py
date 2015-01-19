@@ -8,8 +8,12 @@ from Shared import *
 #import library functions
 import os, re
 
+from lxml import etree
+
 #import newspaper article
 from newspaper import Article
+
+VERBOSE = False
 
 class ArticleScraper():
   """
@@ -27,8 +31,12 @@ class ArticleScraper():
 
     self.url = url
     self.article = Article(self.url,language=self.language)
-    self.article.download()
-    self.article.parse()
+
+    try:
+      self.article.download()
+      self.article.parse()
+    except etree.XMLSyntaxError as error:
+      if verbose: print(error)
 
   def printArticle(self):
     """
