@@ -14,11 +14,13 @@ After running, corpus.txt will hold each documment, one per line, and dictionary
 
 This is a python script to format the corpus.txt file to corpus.dat file that will be used in the LDA implementation.
 The format for the corpus is as follows:
+```
   [No words in document1] [term1]:[term1count] [term2]:[term2count] [term2]:[term2count]
   [No words in document2] [term1]:[term1count] [term2]:[term2count] [term2]:[term2count]
   .
   .
   .
+```
 
 ##MakeDictionary.run
 
