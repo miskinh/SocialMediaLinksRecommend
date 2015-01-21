@@ -1,0 +1,1 @@
+python MakeDictionary.py corpus.txt dictionary.txt allCorpusTextFiles
