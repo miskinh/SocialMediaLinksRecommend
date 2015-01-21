@@ -10,7 +10,7 @@ The command line inputs are the corpus.txt and dictionary.txt files that are to 
 The other inputs are the text files containing the individual documents.
 After running, corpus.txt will hold each documment, one per line, and dictionary will hold the dictionary words.
 
-#FormatCorpus
+#FormatCorpus.py
 
 This is a python script to format the corpus.txt file to corpus.dat file that will be used in the LDA implementation.
 The format for the corpus is as follows:
@@ -22,7 +22,7 @@ The format for the corpus is as follows:
   .
 ```
 
-##MakeDictionary.run
+##FormatCorpus.run
 
 This is a small script to show how the file is run.
 The command line inputs are the corpus.txt and dictionary.txt and corpus.dat.
