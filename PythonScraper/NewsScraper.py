@@ -8,6 +8,7 @@ def run(siteURL):
 
   siteScraper = SiteScraper()
   articles = siteScraper.downloadArticles(siteURL)
+  print(articles)
 
   vocab = {}
   words = str.split(file("OnlineLDA/dictnostops.txt").read())
@@ -22,7 +23,8 @@ def run(siteURL):
     saveJSON(filename,filecontent)
 
 if (__name__ == "__main__"):
-  run('http://cnn.com/')
-  # run('http://www.theguardian.com/uk')
-  # run('http://www.independent.co.uk/')
-  # run("http://www.thetimes.co.uk/")
+  run('http://edition.cnn.com/')
+  run('http://www.bbc.co.uk/news/')
+  run('http://www.theguardian.com/uk')
+  run('http://www.independent.co.uk/')
+  run('http://www.thetimes.co.uk/tto/news/')

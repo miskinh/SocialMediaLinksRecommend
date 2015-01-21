@@ -43,8 +43,11 @@ def getAllTwitterArticles():
 
   for screenName,urls in userURLs.items():
     for url in urls:
-      articleScraper.getArticle(url)
-      articleScraper.saveArticle(screenName)
+      try:
+        articleScraper.getArticle(url)
+        articleScraper.saveArticle(screenName)
+      except ValueError:
+        continue
 
 SAVED_URLS = [u'http://gizmo.do/CJSCp2P',
         u'http://bit.ly/1r1TeoM',
@@ -64,5 +67,5 @@ SAVED_URLS = [u'http://gizmo.do/CJSCp2P',
         u'http://s.hbr.org/115ohsP']
 
 if (__name__ == "__main__"):
-  runSaveArticles()
-  #getAllTwitterArticles()
+  # runSaveArticles()
+  getAllTwitterArticles()

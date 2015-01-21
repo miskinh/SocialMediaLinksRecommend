@@ -8,8 +8,12 @@ from Shared import *
 #import library functions
 import os, re
 
+from lxml import etree
+
 #import newspaper article
 from newspaper import Article
+
+VERBOSE = False
 
 class ArticleScraper():
   """
@@ -27,8 +31,12 @@ class ArticleScraper():
 
     self.url = url
     self.article = Article(self.url,language=self.language)
-    self.article.download()
-    self.article.parse()
+
+    try:
+      self.article.download()
+      self.article.parse()
+    except etree.XMLSyntaxError as error:
+      if verbose: print(error)
 
   def printArticle(self):
     """
@@ -45,8 +53,8 @@ class ArticleScraper():
     folderName defined the sub directory where articles are stored
     """
 
-    fileContent = self.article.text
-    if (len(fileContent) < minLength): raise ValueError
+    text = self.article.text
+    if (len(text) < minLength): raise ValueError
 
     #join directory with folderName
     directory = os.path.join("SavedArticles",cleanFilename(folderName))
@@ -56,12 +64,13 @@ class ArticleScraper():
       os.makedirs(directory)
 
     #name the file the same as the web page title
-    fileName = "{}.txt".format(cleanFilename(self.article.title))
+    title = self.article.title
+    fileName = "{}.txt".format(cleanFilename(title))
     filePath = os.path.join(directory,fileName)
 
-    saveFile(filePath,fileContent.encode('ascii','ignore'))
+    saveFile(filePath,text.encode('ascii','ignore'))
 
-    return fileContent
+    return title,text
 
 if (__name__ == "__main__"):
   articleScraper = ArticleScraper()

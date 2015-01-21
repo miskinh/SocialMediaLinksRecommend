@@ -17,7 +17,7 @@ class TwitterURLs():
   the followers of that user
   """
 
-  def __init__(self,responseCount=40):
+  def __init__(self,responseCount=200):
 
     #set response count
     self.responseCount = responseCount
@@ -31,23 +31,52 @@ class TwitterURLs():
     #set class variables to store responses
     self.tweets = {}
     self.urls = {}
-    self.followers = []
+    self.followers = {}
+    self.friends = {}
 
-  def setFollowers(self):
+  def setFollowers(self,screenName='owner'):
     """
     setFollowers sets the class variable to a list of user IDs that are
     following the authorised user
     """
 
-    self.followers = []
+    self.followers[screenName] = []
 
-    response = self.api.request('followers/list',{'skip_status':'true','include_user_entities':'false','count':self.responseCount})
+    if (screenName == 'owner'):
+      response = self.api.request('followers/list',{'skip_status':'true','include_user_entities':'false','count':self.responseCount})
+    else:    
+      response = self.api.request('followers/list',{'screen_name':screenName,'skip_status':'true','include_user_entities':'false','count':self.responseCount})
     
     for item in response:
-      for user in item['users'][:1]:
-        for key, value in user.items():
-          print(key,value)
-        self.followers.append(user['screen_name'])
+      if ('users' not in item.keys()):
+        print(item)
+        continue
+      for user in item['users']:
+        # for key, value in user.items():
+        #   print(key,value)
+        self.followers[screenName].append(user['screen_name'])
+
+  def setFriends(self,screenName='owner'):
+    """
+    setFriends sets the class variable to a list of user IDs that are
+    following the authorised user
+    """
+
+    self.friends[screenName] = []
+
+    if (screenName == 'owner'):
+      response = self.api.request('friends/list',{'skip_status':'true','include_user_entities':'false','count':self.responseCount})
+    else:    
+      response = self.api.request('friends/list',{'screen_name':screenName,'skip_status':'true','include_user_entities':'false','count':self.responseCount})
+    
+    for item in response:
+      if ('users' not in item.keys()):
+        print(item)
+        continue
+      for user in item['users']:
+        # for key, value in user.items():
+        #   print(key,value)
+        self.friends[screenName].append(user['screen_name'])
 
   
   def setTweets(self,screenName='owner'):
@@ -86,16 +115,27 @@ class TwitterURLs():
       for url in urls:
         self.urls[screenName].append(url['expanded_url'])
 
-  def getFollowers(self):
+  def getFollowers(self,screenName='owner'):
     "printFollowers prints all followers in the class variable followers"
 
-    if (len(self.followers) == 0): self.setFollowers()
+    if (screenName not in self.followers.keys()): self.setFollowers(screenName)
 
     if VERBOSE:
-      for follower in self.followers:
+      for follower in self.followers[screenName]:
         print follower
 
-    return self.followers
+    return self.followers[screenName]
+
+  def getFriends(self,screenName='owner'):
+    "printFriends prints all followers in the class variable followers"
+
+    if (screenName not in self.friends.keys()): self.setFriends(screenName)
+
+    if VERBOSE:
+      for friend in self.friends[screenName]:
+        print friend
+
+    return self.friends[screenName]
 
   def getTweets(self,screenName='owner'):
     "printTweets prints all the tweet text for the given screenName"
@@ -124,12 +164,16 @@ class TwitterURLs():
   def getAllURLs(self):
     "getAllURLs gets all the the URLs shared by a users followers"
 
-    if (len(self.followers) == 0): self.setFollowers()
+    self.getFollowers()
+    self.getFriends()
 
     #set the urls for owner
     self.setURLs()
 
     #get the urls for all owners
+    for friend in self.friends:
+      self.setURLs(friend)
+
     for follower in self.followers:
       self.setURLs(follower)
 
@@ -137,12 +181,13 @@ class TwitterURLs():
     return self.urls
 
 if (__name__ == "__main__"):
-  # VERBOSE = True
+  VERBOSE = True
   twitterURLs = TwitterURLs()
   
   #Get list of twitter followers
   twitterURLs.getFollowers()
-
+  # print("============")
+  twitterURLs.getFriends()
 
   # #Get tweets and URLs for AUTH user
   # twitterURLs.getTweets()
