@@ -1,3 +1,4 @@
+import datetime
 from peewee import *
 
 database = MySQLDatabase('SocialMedia', **{'host': 'localhost', 'password': 'nimandian10', 'user': 'root'})
@@ -12,9 +13,8 @@ class BaseModel(Model):
 class User(BaseModel):
 
     userName = CharField()
-
-    timeDicovered = DateTimeField()
     timeCreated = DateTimeField(null=True)
+    timeDicovered = DateTimeField(default=datetime.datetime.now)
     location = CharField(null=True)
 
     class Meta:
@@ -26,6 +26,8 @@ class Document(BaseModel):
     text = TextField(null=True)
     topics = TextField(null=True)
     url = CharField(null=True)
+
+    timeDicovered = DateTimeField(default=datetime.datetime.now)
 
     class Meta:
         db_table = 'Document'
@@ -48,9 +50,10 @@ class Following(BaseModel):
     fromUser = ForeignKeyField(User, related_name='follower')
     toUser = ForeignKeyField(User, related_name='following')
     
-    timeFirst = DateTimeField()
-    timeLast = DateTimeField()
-    isActive = BooleanField()
+    timeCreated = DateTimeField(null=True)
+    timeDiscovered = DateTimeField(default=datetime.datetime.now)
+    timeLastDiscovered = DateTimeField(default=datetime.datetime.now)
+    isActive = BooleanField(default=True)
 
     class Meta:
         db_table = 'Following'
@@ -72,4 +75,5 @@ class Liking(BaseModel):
 
 if __name__ == "__main__":
     database.connect()
-    database.create_tables()
+    database.create_tables([User,Document,Posting,Following,Liking])
+    database.close()
