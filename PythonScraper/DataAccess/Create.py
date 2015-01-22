@@ -1,5 +1,5 @@
 import datetime
-from DataAccess.Models import *
+from Models import *
 
 class Create(object):
   """docstring for Create"""
@@ -22,7 +22,7 @@ class Create(object):
 
     #Loop documentURLs and add
     for documentURL in documentURLs:
-      self.addDocument(documentURL)
+      self.addPost(userName,documentURL)
 
     return user
 
@@ -38,7 +38,7 @@ class Create(object):
         (Following.toUser == toUser) &
         (Following.isActive == True)
         )[0]
-    except DoesNotExist:
+    except IndexError:
       follow = Following.create(fromUser=fromUser,toUser=toUser)
 
     follow.timeLastDicovered = datetime.datetime.now()
@@ -51,12 +51,30 @@ class Create(object):
 
     try:
       document = Document.select().where(Document.url == documentURL)[0]
-    except DoesNotExist:
+    except IndexError:
       document = Document.create(url=documentURL)
 
     return document
 
+  def addPost(self,userName,documentURL):
+    "adds a post of a ocument to the database"
+
+    user = self.addUser(userName)
+    document = self.addDocument(documentURL)
+
+    try:
+      post = Posting.select().where(
+        (Posting.document == document) &
+        (Posting.user == user)
+      )[0]
+    except IndexError:
+      post = Posting.create(document = document, user=user)
+
+
 if (__name__ == "__main__"):
   create = Create()
-  create.addUser("hpgmiskn",["miskinFollow1","miskinFollow2"],["miskinURL1","miskinURL2"])
+  create.addUser("henry",["henryFollow1","henryFollow2"],["henryURL1","henryURL2"])
+  create.addUser("ian",["ianFollow1","ianFollow2"],["ianURL1","ianURL2"])
+  create.addFollow("henry","ian")
+  create.addPost("henry","ianURL1")
   database.close()
