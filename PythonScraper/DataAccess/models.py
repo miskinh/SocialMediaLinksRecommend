@@ -9,42 +9,67 @@ class BaseModel(Model):
     class Meta:
         database = database
 
-class Documentcontents(BaseModel):
-    documentid = BigIntegerField(db_column='documentID', primary_key=True)
-    sparsewords = TextField(db_column='sparseWords', null=True)
+class User(BaseModel):
+
+    userName = CharField()
+
+    timeDicovered = DateTimeField()
+    timeCreated = DateTimeField(null=True)
+    location = CharField(null=True)
+
+    class Meta:
+        db_table = 'User'
+
+class Document(BaseModel):
+
+    sparseWords = TextField(null=True)
     text = TextField(null=True)
     topics = TextField(null=True)
     url = CharField(null=True)
 
     class Meta:
-        db_table = 'DocumentContents'
+        db_table = 'Document'
 
-class Userfollowing(BaseModel):
-    followingid = BigIntegerField(db_column='followingID')
-    followingname = CharField(db_column='followingName', null=True)
-    isactive = IntegerField(db_column='isActive', null=True)
-    timefirst = DateTimeField(db_column='timeFirst')
-    timelast = DateTimeField(db_column='timeLast')
-    userid = BigIntegerField(db_column='userID', primary_key=True)
-    username = CharField(db_column='userName', null=True)
+class Posting(BaseModel):
+
+    user = ForeignKeyField(User, related_name='poster')
+    document = ForeignKeyField(Document, related_name='posted')
+
+    time = DateTimeField(null=True)
 
     class Meta:
-        db_table = 'UserFollowing'
+        db_table = 'Posting'
+        indexes = (
+            (('user', 'document'), False),
+        )
 
-class Userposting(BaseModel):
-    documentid = BigIntegerField(db_column='documentID', null=True)
-    time = DateTimeField()
-    url = CharField(null=True)
-    userid = BigIntegerField(db_column='userID', primary_key=True)
-    username = CharField(db_column='userName')
+class Following(BaseModel):
 
-    class Meta:
-        db_table = 'UserPosting'
-
-class Users(BaseModel):
-    userid = BigIntegerField(db_column='userID', primary_key=True)
-    username = CharField(db_column='userName', null=True)
+    fromUser = ForeignKeyField(User, related_name='follower')
+    toUser = ForeignKeyField(User, related_name='following')
+    
+    timeFirst = DateTimeField()
+    timeLast = DateTimeField()
+    isActive = BooleanField()
 
     class Meta:
-        db_table = 'Users'
+        db_table = 'Following'
+        indexes = (
+            (('fromUser', 'toUser'), False),
+        )
 
+class Liking(BaseModel):
+
+    user = ForeignKeyField(User, related_name='liker')
+    document = ForeignKeyField(Document, related_name='liked')
+    time = DateTimeField(null=True)
+
+    class Meta:
+        db_table = 'Liking'
+        indexes = (
+            (('user', 'document'), False),
+        )
+
+if __name__ == "__main__":
+    database.connect()
+    database.create_tables()
