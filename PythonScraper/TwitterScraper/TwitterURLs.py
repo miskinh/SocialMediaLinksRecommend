@@ -2,6 +2,10 @@
 TwitterURLs.py is a class that can be used to obtain the URLs of user tweets
 """
 
+#import sys
+#sys.path.insert(0,'/var/pythonscripts/SocialMediaLinksRecommend/PythonScraper')
+#print sys.path
+
 #import all secret keys for twitter access
 from Secret import *
 

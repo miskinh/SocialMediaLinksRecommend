@@ -3,7 +3,7 @@ TwitterNetwork
 This functionality finds all possible friend connections and obtains shared links
 """
 
-from TwitterURLs import TwitterURLs
+from TwitterScraper.TwitterURLs import TwitterURLs
 from DataAccess.Create import Create
 
 def findFollowers(userName="owner"):
@@ -56,6 +56,10 @@ def getLinks():
 
 if (__name__ == "__main__"):
   create = Create()
+  userName = "hpgmiskin"
   followers,urls = findFollowers()
-  create.addUser("hpgmiskin",followers,urls)
-
+  create.addUser(userName,followers,urls)
+  
+  for follower in followers:
+    followers,urls = findFollowers(follower)
+    create.addUser(follower,followers[:5],urls)
