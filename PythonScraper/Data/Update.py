@@ -1,4 +1,5 @@
 import datetime
+from Models import *
 from Create import Create
 
 
@@ -17,18 +18,21 @@ class Update(Create):
     document.save()
 
   def removeLink(self,url):
-    "removes the given url from the document table"
+    "removes the given url from the document table if no text title is set"
 
-    documents = Document.select().where(Document.url == url)
+    documents = Document.select().where(
+      (Document.url == url) &
+      (Document.title == None) &
+      (Document.text == None)
+    )
 
-    if (len(documents) > 1):
-      raise ValueError("Too many documents returned")
-    elif (len(documents) < 1):
-      raise ValueError("No documents with given url found")
-    else:
+    try:
       document = documents[0]
+    except IndexError:
+      print("No documents found for {}".format(url))
+      return
 
-    document.delete_instance(recursive=False)
+    document.delete_instance(recursive=True)
 
   def removeFollow(self,fromUserName,toUserName):
     "specifies a follow relationship as no longer active"

@@ -7,17 +7,22 @@ class Return(object):
   def __init__(self):
     database.connect()
 
-  def getAllDocumentURLs():
+  def getDocumentURLs(self):
     "returns all document urls in the database"
 
     urls = []
 
-    for document in Document.select():
+    documents = Document.select().where(
+      (Document.title == None) &
+      (Document.text == None)
+    )
+
+    for document in documents:
       urls.append(document.url)
 
     return urls
 
-  def getAllDocuments():
+  def getDocuments(self):
     "Returns all the text from the documents in the database"
 
     documents = []
