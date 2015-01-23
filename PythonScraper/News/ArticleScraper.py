@@ -13,7 +13,7 @@ from lxml import etree
 #import newspaper article
 from newspaper import Article
 
-VERBOSE = False
+VERBOSE = True
 
 class ArticleScraper():
   """
@@ -35,8 +35,10 @@ class ArticleScraper():
     try:
       self.article.download()
       self.article.parse()
-    except etree.XMLSyntaxError as error:
-      if verbose: print(error)
+    except Exception as error:
+      print(error)
+
+    if VERBOSE: print self.article.title
 
     return self.article
 

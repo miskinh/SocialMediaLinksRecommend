@@ -1,6 +1,6 @@
 from News.ArticleScraper import ArticleScraper
-from Return import Return
-from Update import Update
+from Data.Return import Return
+from Data.Update import Update
 
 def updateLinks(minLength=100):
   "updates all links in the database"
@@ -12,11 +12,13 @@ def updateLinks(minLength=100):
   urls = returnData.getDocumentURLs()
 
   for url in urls:
-    article = articleScraper.getURL(url)
-
+    print url
+    article = articleScraper.getArticle(url)
     if (len(article.text) < minLength):
-      updateData.removeLink(url)
+      updateData.removeLink(url)      
     else:
       updateData.updateLink(url,article.title,article.text)
 
 
+if (__name__ == "__main__"):
+  updateLinks(200)
