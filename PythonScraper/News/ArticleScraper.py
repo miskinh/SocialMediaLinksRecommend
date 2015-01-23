@@ -3,7 +3,7 @@ ArticleScraper.py uses newspaper to obtain the text from news articles
 """
 
 #import shared functions
-from Shared import *
+# from Shared import *
 
 #import library functions
 import os, re
@@ -37,6 +37,8 @@ class ArticleScraper():
       self.article.parse()
     except etree.XMLSyntaxError as error:
       if verbose: print(error)
+
+    return self.article
 
   def printArticle(self):
     """

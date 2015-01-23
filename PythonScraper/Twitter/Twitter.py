@@ -15,7 +15,7 @@ from TwitterAPI import TwitterAPI
 #Global Printing Variable
 VERBOSE = False
 
-class TwitterURLs():
+class Twitter():
   """
   Twitter URLs enables access to the URLs posted by the authorised user and
   the followers of that user
@@ -127,8 +127,8 @@ class TwitterURLs():
       if (len(self.tweets) == 0): self.setTweets()
       items = self.tweets
     elif (tweetOrFavourite == "favourite"):
-      items = self.favourites
       if (len(self.favourites) == 0): self.setFavourites()
+      items = self.favourites
     else:
       raise ValueError("tweetOrFavourite must either be 'tweet' or 'favourite' not {}".format(tweetOrFavourite))
 
@@ -136,6 +136,7 @@ class TwitterURLs():
 
     for tweet in items:
       try:
+        
         tweetUrls = tweet['entities']['urls']
       except KeyError:
         print "Key Error for user {}".format(userName)
@@ -149,8 +150,8 @@ class TwitterURLs():
 
 if (__name__ == "__main__"):
 
-  twitterURLs = TwitterURLs(4)
+  twitter = Twitter(4)
   
-  print(twitterURLs.getFollowers())
-  print(twitterURLs.getURLs())
-  print(twitterURLs.getURLs("favourite"))
+  print(twitter.getFollowers())
+  print(twitter.getURLs())
+  print(twitter.getURLs("favourite"))

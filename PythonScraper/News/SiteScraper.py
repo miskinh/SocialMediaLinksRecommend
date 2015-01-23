@@ -21,6 +21,20 @@ class SiteScraper(object):
     for article in paper.articles:
       self.articleURLs[siteURL].append(article.url)
 
+  def printArticles(self, siteURL):
+    "prints articles and keyowrds"
+
+    if (siteURL not in self.articleURLs.keys()): self.searchSite(siteURL)
+
+    for articleURL in self.articleURLs[siteURL]:
+      article = self.articleScraper.getArticle(articleURL)
+
+      print(articleURL)
+      print(article.title)
+      print(article.keywords)
+      print('=============')
+
+
   def downloadArticles(self, siteURL):
     "downloadArticles downloads all artiles for the given siteURL"
 
@@ -43,4 +57,4 @@ class SiteScraper(object):
 
 if (__name__ == "__main__"):
   siteScraper = SiteScraper()
-  siteScraper.downloadArticles('http://www.bbc.co.uk/news/')
+  siteScraper.printArticles('http://www.theguardian.com/uk')

@@ -23,11 +23,14 @@ class User(BaseModel):
 class Document(BaseModel):
 
     sparseWords = TextField(null=True)
-    text = TextField(null=True)
     topics = TextField(null=True)
+
     url = CharField(null=True)
+    title = CharField(null=True)
+    text = TextField(null=True) 
 
     timeDicovered = DateTimeField(default=datetime.datetime.now)
+    timeUpdated = DateTimeField(null=True)
 
     class Meta:
         db_table = 'Document'
