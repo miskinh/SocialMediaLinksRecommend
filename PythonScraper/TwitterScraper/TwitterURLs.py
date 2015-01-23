@@ -181,13 +181,20 @@ class TwitterURLs():
     return self.urls
 
 if (__name__ == "__main__"):
-  VERBOSE = True
+  VERBOSE = False
   twitterURLs = TwitterURLs()
   
   #Get list of twitter followers
   twitterURLs.getFollowers()
   # print("============")
   twitterURLs.getFriends()
+
+  twitterURLs.getTweets("Habitly")
+  print len(twitterURLs.tweets)
+
+  for user in twitterURLs.tweets:
+    for tweet in twitterURLs.tweets[user]:
+      print tweet['text']
 
   # #Get tweets and URLs for AUTH user
   # twitterURLs.getTweets()

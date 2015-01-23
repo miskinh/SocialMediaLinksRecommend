@@ -23,7 +23,7 @@ def saveArticles(urls):
     articleScraper.saveArticle("Test")
 
 def runSaveArticles(useTwitter=False):
-  "saves the articles shared by owner or a sample set of articles defined bellow"
+  "saves the articles shared by owner or a sample set of articles defined below"
   #Change to false to not use twitter
 
   if useTwitter:
