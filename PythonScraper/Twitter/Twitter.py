@@ -13,8 +13,6 @@ from TwitterAPI import TwitterAPI
 #Global Printing Variable
 VERBOSE = False
 
-MINUTE = timedelta(minutes=1)
-
 class Twitter(object):
   """
   Twitter URLs enables access to the URLs posted by the authorised user and
@@ -42,7 +40,9 @@ class Twitter(object):
     self.tweets = []
     self.favourites = []
 
-  def request(self,url,paramters={}):
+  def request(self,url,parameters={}):
+
+    return self.api.request(url,parameters)
 
     # Find the current time
     now = datetime.now()
@@ -51,18 +51,18 @@ class Twitter(object):
     if (url in self.requests.keys()):
       lastCall = self.requests[url]
     else:
-      lastCall = now - MINUTE
+      lastCall = datetime.now() - timedelta(minutes=1)
 
     # Compute the time since last call
-    sinceLastCall = now - lastCall
+    sinceLastCall = timedelta(datetime.now(),lastCall)
 
     # If required sleep for a period of time
-    if (sinceLastCall < MINUTE):
-      time.sleep(sinceLastCall - MINUTE)
+    if (sinceLastCall < timedelta(minutes=1)):
+      time.sleep(sinceLastCall - timedelta(minutes=1))
 
     # Call request and update last call time
-    self.api.request(url,parameters)
     self.requests[url] = datetime
+    return self.api.request(url,parameters)
 
   def getFollowers(self):
     """
@@ -162,7 +162,7 @@ class Twitter(object):
         
         tweetUrls = tweet['entities']['urls']
       except KeyError:
-        print "Key Error for user {}".format(userName)
+        print "Key Error for user {}".format(self.userName)
         tweetUrls = []
 
       for url in tweetUrls:
