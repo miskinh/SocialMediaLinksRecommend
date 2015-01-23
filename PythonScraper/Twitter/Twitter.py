@@ -2,18 +2,18 @@
 TwitterURLs.py is a class that can be used to obtain the URLs of user tweets
 """
 
-#import sys
-#sys.path.insert(0,'/var/pythonscripts/SocialMediaLinksRecommend/PythonScraper')
-#print sys.path
-
 #import all secret keys for twitter access
 from Secret import *
 
-#import TwitterAPI
+#import external modules
+import time
+from datetime import  datetime, timedelta
 from TwitterAPI import TwitterAPI
 
 #Global Printing Variable
 VERBOSE = False
+
+MINUTE = timedelta(minutes=1)
 
 class Twitter(object):
   """
@@ -33,6 +33,7 @@ class Twitter(object):
                           ACCESS_TOKEN_SECRET)
 
     #set class variables to store responses
+    self.requests = {}
     self.setUser()
 
   def setUser(self,userName="owner"):
@@ -40,6 +41,28 @@ class Twitter(object):
     self.userName = userName
     self.tweets = []
     self.favourites = []
+
+  def request(self,url,paramters={}):
+
+    # Find the current time
+    now = datetime.now()
+
+    # Find the time of the last call or make one up
+    if (url in self.requests.keys()):
+      lastCall = self.requests[url]
+    else:
+      lastCall = now - MINUTE
+
+    # Compute the time since last call
+    sinceLastCall = now - lastCall
+
+    # If required sleep for a period of time
+    if (sinceLastCall < MINUTE):
+      time.sleep(sinceLastCall - MINUTE)
+
+    # Call request and update last call time
+    self.api.request(url,parameters)
+    self.requests[url] = datetime
 
   def getFollowers(self):
     """
@@ -50,9 +73,9 @@ class Twitter(object):
     followers = []
 
     if (self.userName == 'owner'):
-      response = self.api.request('followers/list',{'skip_status':'true','include_user_entities':'false','count':self.responseCount})
+      response = self.request('followers/list',{'skip_status':'true','include_user_entities':'false','count':self.responseCount})
     else:    
-      response = self.api.request('followers/list',{'screen_name':self.userName,'skip_status':'true','include_user_entities':'false','count':self.responseCount})
+      response = self.request('followers/list',{'screen_name':self.userName,'skip_status':'true','include_user_entities':'false','count':self.responseCount})
     
     for item in response:
       if ('users' not in item.keys()):
@@ -72,9 +95,9 @@ class Twitter(object):
     friends = []
 
     if (self.userName == 'owner'):
-      response = self.api.request('friends/list',{'skip_status':'true','include_user_entities':'false','count':self.responseCount})
+      response = self.request('friends/list',{'skip_status':'true','include_user_entities':'false','count':self.responseCount})
     else:    
-      response = self.api.request('friends/list',{'screen_name':self.userName,'skip_status':'true','include_user_entities':'false','count':self.responseCount})
+      response = self.request('friends/list',{'screen_name':self.userName,'skip_status':'true','include_user_entities':'false','count':self.responseCount})
     
     for item in response:
       if ('users' not in item.keys()):
@@ -92,9 +115,9 @@ class Twitter(object):
     """
     
     if (self.userName == 'owner'):
-      response = self.api.request('statuses/user_timeline',{'count':self.responseCount})
+      response = self.request('statuses/user_timeline',{'count':self.responseCount})
     else:
-      response = self.api.request('statuses/user_timeline',{'screen_name':self.userName,'count':self.responseCount})
+      response = self.request('statuses/user_timeline',{'screen_name':self.userName,'count':self.responseCount})
 
     self.tweets = []
 
@@ -108,9 +131,9 @@ class Twitter(object):
     """
     
     if (self.userName == 'owner'):
-      response = self.api.request('favorites/list',{'count':self.responseCount})
+      response = self.request('favorites/list',{'count':self.responseCount})
     else:
-      response = self.api.request('favorites/list',{'screen_name':self.userName,'count':self.responseCount})
+      response = self.request('favorites/list',{'screen_name':self.userName,'count':self.responseCount})
 
     self.favourites = []
 

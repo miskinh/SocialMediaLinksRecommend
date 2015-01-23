@@ -11,7 +11,6 @@ class TwitterNetwork(Twitter):
   def __init__(self, responseCount=200):
     super(TwitterNetwork, self).__init__(responseCount)
 
-
   def getUser(self,userName="owner"):
     "findFollowers finds all the followers of followers for the authorised user"
 
@@ -25,5 +24,3 @@ class TwitterNetwork(Twitter):
     user["likeURLs"] = self.getURLs("favourites")
 
     return user
-
-

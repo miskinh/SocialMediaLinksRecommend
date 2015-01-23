@@ -22,9 +22,6 @@ class User(BaseModel):
 
 class Document(BaseModel):
 
-    sparseWords = TextField(null=True)
-    topics = TextField(null=True)
-
     url = CharField(null=True)
     title = CharField(null=True)
     text = TextField(null=True) 
@@ -37,8 +34,8 @@ class Document(BaseModel):
 
 class Posting(BaseModel):
 
-    user = ForeignKeyField(User, related_name='poster')
-    document = ForeignKeyField(Document, related_name='posted')
+    user = ForeignKeyField(User, related_name='poster', db_column='posterID')
+    document = ForeignKeyField(Document, related_name='posted', db_column='postedID')
 
     time = DateTimeField(null=True)
 
@@ -47,8 +44,8 @@ class Posting(BaseModel):
 
 class Following(BaseModel):
 
-    fromUser = ForeignKeyField(User, related_name='follower')
-    toUser = ForeignKeyField(User, related_name='following')
+    fromUser = ForeignKeyField(User, related_name='follower', db_column="followerID")
+    toUser = ForeignKeyField(User, related_name='following', db_column="followingID")
     
     timeCreated = DateTimeField(null=True)
     timeDiscovered = DateTimeField(default=datetime.datetime.now)
@@ -60,8 +57,8 @@ class Following(BaseModel):
 
 class Liking(BaseModel):
 
-    user = ForeignKeyField(User, related_name='liker')
-    document = ForeignKeyField(Document, related_name='liked')
+    user = ForeignKeyField(User, related_name='liker', db_column="likerID")
+    document = ForeignKeyField(Document, related_name='liked', db_column="likedID")
     time = DateTimeField(null=True)
 
     class Meta:
