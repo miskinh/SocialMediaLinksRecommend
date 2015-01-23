@@ -7,7 +7,7 @@ class Create(object):
   def __init__(self):
     database.connect()
 
-  def addUser(self,userName,followerUserNames=[],documentURLs=[]):
+  def addUser(self,userName,friendUserNames=[],followerUserNames=[],documentURLs=[]):
     "add user adds the given user to the database"
 
     #Check if user exists else create
@@ -18,7 +18,11 @@ class Create(object):
 
     #Loop followers and add relationships
     for followerUserName in followerUserNames:
-      self.addFollow(userName,followerUserName)
+      self.addFollow(followerUserName,userName)
+
+    #Loop followers and add relationships
+    for friendUserName in friendUserNames:
+      self.addFollow(userName,friendUserName)
 
     #Loop documentURLs and add
     for documentURL in documentURLs:
