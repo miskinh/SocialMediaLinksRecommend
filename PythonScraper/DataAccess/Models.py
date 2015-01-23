@@ -41,9 +41,6 @@ class Posting(BaseModel):
 
     class Meta:
         db_table = 'Posting'
-        indexes = (
-            (('user', 'document'), False),
-        )
 
 class Following(BaseModel):
 
@@ -57,9 +54,6 @@ class Following(BaseModel):
 
     class Meta:
         db_table = 'Following'
-        indexes = (
-            (('fromUser', 'toUser'), False),
-        )
 
 class Liking(BaseModel):
 
@@ -69,9 +63,6 @@ class Liking(BaseModel):
 
     class Meta:
         db_table = 'Liking'
-        indexes = (
-            (('user', 'document'), False),
-        )
 
 if __name__ == "__main__":
     database.connect()

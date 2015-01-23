@@ -4,27 +4,38 @@ This functionality finds all possible friend connections and obtains shared link
 """
 
 from TwitterURLs import TwitterURLs
+from DataAccess.Create import Create
 
-def findFriends():
-  "findFriends finds all the friends of friends for the authorised user"
+def findFollowers(userName="owner"):
+  "findFollowers finds all the followers of followers for the authorised user"
+
+  # Construct TwitterURLs with a return limit of 3
+  twitterURLs = TwitterURLs(100)
+  followers = twitterURLs.getFollowers(userName)
+  urls = twitterURLs.getURLs(userName)
+
+  return followers,urls
+
+def printFollowers():
+  "findFollowers finds all the followers of followers for the authorised user"
 
   # Construct TwitterURLs with a return limit of 3
   twitterURLs = TwitterURLs(3)
-  friends = twitterURLs.getFriends()
+  followers = twitterURLs.getFollowers()
 
-  # For all friends
-  for friend in friends:
-    print(friend)
+  # For all followers
+  for follower in followers:
+    print(follower)
 
-    #  Find friends friends
-    friendFriends = twitterURLs.getFriends(friend)
-    for friendFriend in friendFriends:
-      print("\t" + friendFriend)
+    #  Find followers followers
+    followerFollowers = twitterURLs.getFollowers(follower)
+    for followerFollower in followerFollowers:
+      print("\t" + followerFollower)
 
-      # Find friends friends friends
-      friendFriendFriends = twitterURLs.getFriends(friendFriend)
-      for friendFriendFriend in friendFriendFriends:
-        print("\t\t" + friendFriendFriend)
+      # Find followers followers followers
+      followerFollowerFollowers = twitterURLs.getFollowers(followerFollower)
+      for followerFollowerFollower in followerFollowerFollowers:
+        print("\t\t" + followerFollowerFollower)
 
 def getLinks():
   "getLinks returns the links for a number of specified users"
@@ -44,4 +55,7 @@ def getLinks():
   print(urls)
 
 if (__name__ == "__main__"):
-  getLinks()
+  create = Create()
+  followers,urls = findFollowers()
+  create.addUser("hpgmiskin",followers,urls)
+
