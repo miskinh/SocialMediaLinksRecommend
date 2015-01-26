@@ -2,7 +2,7 @@
 import MySQLdb
 
 
-def conect():
+def connect():
         db = MySQLdb.connect(host="localhost", # your host, usually localhost
                              user="root", # your username
                              passwd="nimandian10", # your password

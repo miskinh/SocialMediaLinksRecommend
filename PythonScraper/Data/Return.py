@@ -31,3 +31,12 @@ class Return(object):
       documents.append(document.text)
 
     return documents
+
+  def getLastUsername(self):
+    "Returns the last username in the database"
+
+    username = ""
+    for user in User.select():
+      username = user.userName
+
+    return username

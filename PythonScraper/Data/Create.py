@@ -46,7 +46,7 @@ class Create(object):
     return user
 
   def addFollow(self,fromUserName,toUserName):
-    "adds a following relationship between two user "
+    "adds a following relationship between two users"
 
     fromUser = self.addUser(fromUserName)
     toUser = self.addUser(toUserName)

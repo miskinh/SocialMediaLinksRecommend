@@ -64,6 +64,13 @@ class Liking(BaseModel):
     class Meta:
         db_table = 'Liking'
 
+class Dictionary(BaseModel):              
+    
+    word = CharField()
+    time = DateTimeField(default=datetime.datetime.now)
+    class Meta:
+        db_table = 'Dictionary' 
+
 if __name__ == "__main__":
     database.connect()
     database.create_tables([User,Document,Posting,Following,Liking])

@@ -3,7 +3,8 @@ TwitterURLs.py is a class that can be used to obtain the URLs of user tweets
 """
 
 #import all secret keys for twitter access
-from Secret import *
+#from Secret import *
+from TomsSecret import *
 
 #import external modules
 import time

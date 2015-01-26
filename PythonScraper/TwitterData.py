@@ -12,7 +12,7 @@ twitter = TwitterNetwork(10)
 def getOwnerNetwork():
 
   user = twitter.getUser()
-  user["userName"] = "hpgmiskin"
+  user["userName"] = "giblets257"
   create.addUserObject(user)
 
   for follower in user["followers"]:
