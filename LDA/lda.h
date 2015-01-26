@@ -1,60 +1,57 @@
+// (C) Copyright 2004, David M. Blei (blei [at] cs [dot] cmu [dot] edu)
+
+// This file is part of LDA-C.
+
+// LDA-C is free software; you can redistribute it and/or modify it under
+// the terms of the GNU General Public License as published by the Free
+// Software Foundation; either version 2 of the License, or (at your
+// option) any later version.
+
+// LDA-C is distributed in the hope that it will be useful, but WITHOUT
+// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+// FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+// for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
+// USA
+
 #ifndef LDA_H
 #define LDA_H
-#include <vector>
-#include <map>
 
-typedef std::map<std::string, int>::iterator mapIt;
-
-class Lda{
-private:
-	//number of topics
-	int K;
-
-	//number of documents
-	int M;
-
-	//hyperparameter alpha (value found on other implementations)
-	double alpha;
-
-	//hyperparameter beta (value found on other implementations)
-	double beta;
-
-	//array of the sentences do do lda on
-	std::string* documents;
-
-	//word topic assignments in each document
-	int** assignment;
-
-	//matrix N corresponding to the no times topic k found in document d
-	int** N;
-
-	//matrix v corresponding to the number of times that a work w(d,n) is found in topic k
-	std::map<std::string,int*> v;
-
-	//counts the number of words in a document
-	int countWords(std::string document);
-
-public:
-	//constructor
-	Lda(int noDocuments, std::string inputDocuments[], int noTopics);
-
-	//destructor
-	~Lda();
-
-	//outputs the documents
-	void outputDocuments();
-
-	//repeats the algorithm for the given number of iterations
-	void algorithm(int noRepetitions);
-
-	//calculates the probability of a token being assigned a topic given the rest of the documents
-	double calculateStatistic(int topic, std::string word, int document);
-
-	void outputTopicWordAssignment(std::ostream& out);
-
-	void outputWordsInEachTopic(std::ostream& out);
+typedef struct
+{
+    int* words;
+    int* counts;
+    int length;
+    int total;
+} document;
 
 
-};
+typedef struct
+{
+    document* docs;
+    int num_terms;
+    int num_docs;
+} corpus;
+
+
+typedef struct
+{
+    double alpha;
+    double** log_prob_w;
+    int num_topics;
+    int num_terms;
+} lda_model;
+
+
+typedef struct
+{
+    double** class_word;
+    double* class_total;
+    double alpha_suffstats;
+    int num_docs;
+} lda_suffstats;
 
 #endif

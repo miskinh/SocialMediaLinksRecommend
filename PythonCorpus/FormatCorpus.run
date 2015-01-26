@@ -1,0 +1,1 @@
+python FormatCorpus.py corpus.txt dictionary.txt corpus.dat
